@@ -32,10 +32,9 @@ public class OpenAiTranslatorEndpoint : HttpEndpoint
 
     public override void OnCreateRequest(IHttpRequestCreationContext context)
     {
-        var requestData = BaseEndpointBehavior.GetRequestData(_config, context.UntranslatedText);
-        //File.WriteAllText($@"C:\Debug\{DateTime.Now.ToString("yyyy-MM-dd-hh-mm")}-{Guid.NewGuid()}-request.txt", requestData);
+        var requestData = BaseEndpointBehavior.GetRequestData(_config, context.UntranslatedText, config.Url);
 
-        var request = new XUnityWebRequest("POST", _config.Url, requestData);
+        var request = new XUnityWebRequest("POST", config.Url, requestData);
         request.Headers[HttpRequestHeader.Authorization] = $"Bearer {_config.ApiKey}";
         request.Headers[HttpRequestHeader.ContentType] = "application/json";
 

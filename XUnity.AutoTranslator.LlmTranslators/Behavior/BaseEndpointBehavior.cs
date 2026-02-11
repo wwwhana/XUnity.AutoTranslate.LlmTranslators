@@ -1,4 +1,4 @@
-﻿using SimpleJSON;
+using SimpleJSON;
 using System.Text;
 using System.Text.RegularExpressions;
 using XUnity.AutoTranslator.LlmTranslators.Config;
@@ -7,7 +7,7 @@ namespace XUnity.AutoTranslator.LlmTranslators.Behavior;
 
 public static class BaseEndpointBehavior
 {
-    public static string GetRequestData(LlmConfig config, string raw)
+    public static string GetRequestData(LlmConfig config, string raw, string url = null)
     {
         var systemPrompt = new StringBuilder(config.SystemPrompt);
         systemPrompt.AppendLine(ConstructGlossaryPrompt(raw, config));
@@ -24,7 +24,7 @@ public static class BaseEndpointBehavior
         userMessage["content"] = raw;
         messages.Add(userMessage);
 
-        // Create the requestBody object using SimpleJSON
+        // Create requestBody object using SimpleJSON
         var requestBody = new JSONObject
         {
             ["model"] = config.Model,
@@ -52,6 +52,10 @@ public static class BaseEndpointBehavior
             requestBody["frequency_penalty"] = 0;
             requestBody["presence_penalty"] = 0;
         }
+
+        // Add URL parameter if provided
+        if (!string.IsNullOrEmpty(url))
+            requestBody["url"] = url;
 
         return requestBody.ToString();
     }
@@ -82,18 +86,18 @@ public static class BaseEndpointBehavior
         // If we do any other clean up should be done here
         if ((result.StartsWith("\"") && result.EndsWith("\""))
             || (result.StartsWith("'") && result.EndsWith("'")))
-            result = result.Substring(1, result.Length - 2);      
+            result = result.Substring(1, result.Length - 2);
 
         //Take out wide quotes
         result = result
-            .Replace("’", "'")
-            .Replace("‘", "'");
+            .Replace("'", "'")
+            .Replace("'", "'");
 
         result = Regex.Unescape(result);
-        
+
         //Make sure first character is upper case
         if (Char.IsLower(result[0]) && raw != result)
-            result = Char.ToUpper(result[0]) + result.Substring(1, result.Length - 1);
+            result = Char.ToUpper(result[0]) + result.Substring(1);
 
         return result.Trim();
     }
