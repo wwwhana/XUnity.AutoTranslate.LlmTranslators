@@ -1,0 +1,15 @@
+apiKey: "Change me"
+apiKeyRequired: true
+url: "https://api.z.ai/api/paas/v4/chat/completions"
+model: "glm-4.7-flash"
+useCodingEndpoint: false
+modelParams:
+  temperature: 0.6
+  top_p: 0.95
+  max_tokens: 4096
+systemPrompt: |
+  Translate Simplified Chinese into English, preserving context and meaning. Keep special characters, including escaped sequences (e.g., \n, \=, <), as they appear. Use direct English for professional titles (Envoy, Doctor, Captain) and traditional English for noble/martial titles (Lord, Master, Hero) and Wuxia terms (Qi, sects, cultivation). Use Pinyin for names only, not titles. Default to gender-neutral terms unless gender is explicit. Refine phrasing for readability while maintaining intent and capitalization. Output only the translation.
+glossaryPrompt: |
+  #Glossary for Consistent Translations
+  Use the translation for exact matches.
+  ## Terms

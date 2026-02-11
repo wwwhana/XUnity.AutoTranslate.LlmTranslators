@@ -14,6 +14,7 @@ public class LlmConfig
     public string SystemPrompt { get; set; } = string.Empty;
     public string GlossaryPrompt { get; set; } = string.Empty;
     public Dictionary<string, object> ModelParams { get; set; } = [];
+    public bool UseCodingEndpoint { get; set; } = false;
 
     [YamlIgnore]
     public List<GlossaryLine> GlossaryLines { get; set; } = [];
