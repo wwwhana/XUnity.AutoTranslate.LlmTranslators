@@ -11,7 +11,7 @@ public class ZaiTranslatorEndpoint : HttpEndpoint
     public override string Id => "ZaiTranslate";
     public override string FriendlyName => "Zai Translate (Zhipu AI GLM)";
     public override int MaxTranslationsPerRequest => 1;
-    public override int MaxConcurrency => 15;
+    public override int MaxConcurrency => _config.MaxConcurrency;
 
     private LlmConfig _config = new();
 
@@ -22,8 +22,7 @@ public class ZaiTranslatorEndpoint : HttpEndpoint
         _config = Configuration.GetConfiguration(file);
         Configuration.LoadGlossary(_config, "Zai-Glossary.yaml");
 
-        // Remove artificial delays
-        context.SetTranslationDelay(0.1f);
+        context.SetTranslationDelay(_config.TranslationDelay);
         context.DisableSpamChecks();
 
         if (string.IsNullOrEmpty(_config.ApiKey))

@@ -12,8 +12,7 @@ public class OllamaTranslatorEndpoint : HttpEndpoint
     public override string FriendlyName => "Ollama Translate";
     public override int MaxTranslationsPerRequest => 1;
 
-    // Careful not to melt machines
-    public override int MaxConcurrency => 5;
+    public override int MaxConcurrency => _config.MaxConcurrency;
 
     private LlmConfig _config = new();
 
@@ -24,8 +23,7 @@ public class OllamaTranslatorEndpoint : HttpEndpoint
         _config = Configuration.GetConfiguration(file);
         Configuration.LoadGlossary(_config, "Ollama-Glossary.yaml");
 
-        // Remove artificial delays
-        context.SetTranslationDelay(0.1f);
+        context.SetTranslationDelay(_config.TranslationDelay);
         context.DisableSpamChecks();
 
         if (string.IsNullOrEmpty(_config.ApiKey) && _config.ApiKeyRequired)

@@ -2,6 +2,8 @@ apiKey: "Change me"
 apiKeyRequired: true
 url: "https://api.z.ai/api/paas/v4/chat/completions"
 model: "glm-4.7-flash"
+maxConcurrency: 15
+translationDelay: 0.1
 useCodingEndpoint: false
 modelParams:
   temperature: 0.6

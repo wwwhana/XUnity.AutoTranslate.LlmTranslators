@@ -11,7 +11,7 @@ public class OpenAiTranslatorEndpoint : HttpEndpoint
     public override string Id => "OpenAiTranslate";
     public override string FriendlyName => "OpenAi Translate";
     public override int MaxTranslationsPerRequest => 1;
-    public override int MaxConcurrency => 15;
+    public override int MaxConcurrency => _config.MaxConcurrency;
 
     private LlmConfig _config = new();
 
@@ -22,8 +22,7 @@ public class OpenAiTranslatorEndpoint : HttpEndpoint
         _config = Configuration.GetConfiguration(file);
         Configuration.LoadGlossary(_config, "OpenAi-Glossary.yaml");
 
-        // Remove artificial delays
-        context.SetTranslationDelay(0.1f);
+        context.SetTranslationDelay(_config.TranslationDelay);
         context.DisableSpamChecks();
 
         if (string.IsNullOrEmpty(_config.ApiKey))
@@ -32,9 +31,9 @@ public class OpenAiTranslatorEndpoint : HttpEndpoint
 
     public override void OnCreateRequest(IHttpRequestCreationContext context)
     {
-        var requestData = BaseEndpointBehavior.GetRequestData(_config, context.UntranslatedText, config.Url);
+        var requestData = BaseEndpointBehavior.GetRequestData(_config, context.UntranslatedText, _config.Url);
 
-        var request = new XUnityWebRequest("POST", config.Url, requestData);
+        var request = new XUnityWebRequest("POST", _config.Url, requestData);
         request.Headers[HttpRequestHeader.Authorization] = $"Bearer {_config.ApiKey}";
         request.Headers[HttpRequestHeader.ContentType] = "application/json";
 

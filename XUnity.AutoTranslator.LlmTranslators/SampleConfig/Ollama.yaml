@@ -2,6 +2,8 @@
 apiKeyRequired: false
 url: "http://localhost:11434/api/chat"
 model: "vanilj/phi-4-unsloth"
+maxConcurrency: 5
+translationDelay: 0.1
 modelParams:
   temperature: 0.2
   max_tokens: 4096

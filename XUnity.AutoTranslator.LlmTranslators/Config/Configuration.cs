@@ -15,6 +15,8 @@ public class LlmConfig
     public string GlossaryPrompt { get; set; } = string.Empty;
     public Dictionary<string, object> ModelParams { get; set; } = [];
     public bool UseCodingEndpoint { get; set; } = false;
+    public int MaxConcurrency { get; set; } = 15;
+    public float TranslationDelay { get; set; } = 0.1f;
 
     [YamlIgnore]
     public List<GlossaryLine> GlossaryLines { get; set; } = [];

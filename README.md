@@ -5,13 +5,16 @@ A series of LLM Translators that can be used with popular LLMs such as ChatGpt c
 Current supported plugins include:
 - [OpenAI](https://platform.openai.com/)
 	- Probably the most popular LLM that has the highest quality but is not Free
+- [Z.ai (Zhipu AI GLM)](https://z.ai/)
+	- Zhipu AI's GLM models accessible via the Z.ai API. Supports both standard and coding endpoints.
 - [Ollama Models](https://ollama.com/)
 	- Ollama is a local hosting option for LLMs. You are able to run one or more llms on your local machine of varying size. This option is free but will require you to engineer your prompts dependant on the model and/or language.
 
 # Why use this instead of the [Custom] endpoint?
 
-- We run up to 15 translations in parallel (unlike the custom endpoint which is tied to 1)
-- We have removed the spam restriction (which has 1 second by default on custom)
+- Configurable parallel translations via `maxConcurrency` in your YAML config (default: 15, unlike the custom endpoint which is tied to 1)
+- Configurable translation delay via `translationDelay` (default: 0.1s, the custom endpoint has 1 second by default)
+- Spam restriction is disabled
 
 # Installation instructions
 
@@ -31,8 +34,9 @@ To configure your LLM you will need to follow the following steps:
 	- If used ReiPatcher: `<GameDir>/AutoTranslator`
 	- If used BepinEx: `<GameDir>/BepinEx/config`
 2. Open the config for the LLMTranslator you wish to use
-	- If OpenaI: `OpenAi.Yml`
-	- If a local Olama LLM: `Ollama.Yml`
+	- If OpenAI: `OpenAi.yaml`
+	- If Z.ai: `Zai.yaml`
+	- If a local Ollama LLM: `Ollama.yaml`
 3. Update your config with any API keys, custom urls, glossaries and system prompts.
 4. Finally update your AutoTranslator INI file with your translate service
 	- ```
@@ -40,8 +44,9 @@ To configure your LLM you will need to follow the following steps:
 	  Endpoint=OpenAiTranslate
 	  FallbackEndpoint=
 	  ```
-	- If OpenAi: `OpenAiTranslate`
-	- If a local Olama LLM: `OllamaTranslate`
+	- If OpenAI: `OpenAiTranslate`
+	- If Z.ai: `ZaiTranslate`
+	- If a local Ollama LLM: `OllamaTranslate`
 
 ## Global API Key
 
@@ -54,12 +59,12 @@ We also use global environment variables so you can just set your API Key once a
 
 We have seperate files that can be override any config you have loaded in your config file. This makes it easier to publish game specific prompts, glossaries or just make it easier to use multi line prompts without having to worry about YAML formatting.
 
-These files are:
-  - `OpenAi-SystemPrompt.txt` or `Ollama-SystemPrompt.txt`
+These files are (replace `{Prefix}` with `OpenAi`, `Zai`, or `Ollama`):
+  - `{Prefix}-SystemPrompt.txt`
 	- Use this file to update your system prompt
-  - `OpenAi-GlossaryPrompt.txt` or `Ollama-GlossaryPrompt.txt`
+  - `{Prefix}-GlossaryPrompt.txt`
 	- Use this file to update your glossary prompt
-  - `OpenAi-ApiKey.txt` or `Ollama-ApiKey.txt`
+  - `{Prefix}-ApiKey.txt`
 	- Use this file to update your API Key
 
 # Glossary
