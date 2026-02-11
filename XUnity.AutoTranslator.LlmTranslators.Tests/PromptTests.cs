@@ -29,9 +29,8 @@ public class PromptTests
     [Fact]
     public async Task OpenAiPayloadGenTest()
     {
-        //var raw = "你就著殘燭火光，讀了講經閣借來的《唐詩選輯》";
-        var raw = "我曉得。\r\n雖說妳是門中年紀最小的師妹，但妳天資聰穎，練功又勤，\r\n掌門獨創的「天地無聲勢」也唯獨傳妳一人，說不定妳的功夫已比我還深了。";
         var config = Configuration.GetConfiguration($"{sampleDirectory}/OpenAi.yaml");
+        var raw = "我曉得。\r\n雖說妳是門中年最小的師妹，但妳天資聰穎，勤又善，\r\n掌門獨創的「天地無聲勢」也唯獨傳妳一人，說不定妳的功夫已比我還深了。";
         var payload = BaseEndpointBehavior.GetRequestData(config, raw);
 
         var client = new HttpClient();
@@ -42,10 +41,31 @@ public class PromptTests
         var responseContent = await response.Content.ReadAsStringAsync();
         File.WriteAllText($"{workingDirectory}/TestOutput/OpenAiPayloadGenTest.json", responseContent);
 
-        // Check Serialisation parsing
+        // Check Serialization parsing
         var jsonResponse = JSON.Parse(responseContent);
         var result = jsonResponse["choices"]?[0]?["message"]?["content"]?.ToString() ?? string.Empty;
         File.WriteAllText($"{workingDirectory}/TestOutput/OpenAiPayloadGenTest.txt", result);
+    }
+
+    [Fact]
+    public async Task ZaiPayloadGenTest()
+    {
+        var config = Configuration.GetConfiguration($"{sampleDirectory}/Zai.yaml");
+        var raw = "测试翻译"; // 또는 샘플 텍스트
+        var payload = BaseEndpointBehavior.GetRequestData(config, raw);
+
+        var client = new HttpClient();
+        var content = new StringContent(payload, Encoding.UTF8, "application/json");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", System.Environment.GetEnvironmentVariable("AutoTranslator_API_Key"));
+        var response = await client.PostAsync(config.Url, content);
+
+        var responseContent = await response.Content.ReadAsStringAsync();
+        File.WriteAllText($"{workingDirectory}/TestOutput/ZaiPayloadGenTest.json", responseContent);
+
+        // Check Serialization parsing
+        var jsonResponse = JSON.Parse(responseContent);
+        var result = jsonResponse["choices"]?[0]?["message"]?["content"]?.ToString() ?? string.Empty;
+        File.WriteAllText($"{workingDirectory}/TestOutput/ZaiPayloadGenTest.txt", result);
     }
 
     [Fact]
